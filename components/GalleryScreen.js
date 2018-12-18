@@ -20,7 +20,10 @@ export default class GalleryScreen extends React.Component {
    
     let album = await MediaLibrary.getAlbumAsync('lsCamera')
     let options = {album: album.id}
+    console.log('album',options)
     let photos = await MediaLibrary.getAssetsAsync(options)
+
+    console.log('photos',photos)
     
     this.setState({ photos: photos.assets });
     
@@ -43,42 +46,25 @@ export default class GalleryScreen extends React.Component {
       </ScrollView>
     </View>
     )
-
-    toggleSelection = (uri) => {
-   
-
-      console.log("ur2",uri)
-
-
+    toggleSelection = (photo) => {
     this.setState(
-      { viewPhoto: !this.state.viewPhoto,photo: uri },
+      { viewPhoto: !this.state.viewPhoto,photo: photo },
     );
-
-  
-    
-   
   }
 
-  renderViewPhoto = (uri) => {
-
-    console.log('uri',uri)
-
-    return <ViewPhoto uri={uri} onPress={this.toggleView.bind(this)} 
+  renderViewPhoto = (photo) => {
+    return <ViewPhoto  photo={photo} uri={photo.uri} onPress={this.toggleView.bind(this)} 
      />
     
   };
 
   renderPhoto = photo => {
       const uri = photo.uri;
-      console.log('uri-image',uri)
-
-      
-
       return (
     <TouchableOpacity
     key={photo.fileName}
     style={styles.pictureWrapper}
-    onPress={() => this.toggleSelection(photo.uri)}
+    onPress={() => this.toggleSelection(photo)}
     activeOpacity={1}
   >
     <Image

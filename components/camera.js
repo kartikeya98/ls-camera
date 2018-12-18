@@ -122,10 +122,10 @@ export default class CameraScreen extends React.Component {
       
       
       const options = {quality: 1,  
-        exif: Date(Date.now), onPictureSaved: this.onPictureSaved}
+        exif: true, onPictureSaved: this.onPictureSaved}
 
+        
 
-  
 
     if (this.camera) {
         await this.camera.takePictureAsync(options)  
@@ -140,10 +140,13 @@ export default class CameraScreen extends React.Component {
     let album = await MediaLibrary.getAlbumAsync('lsCamera')
     
     if(album === null) {
-      const promises =  await MediaLibrary.createAssetAsync(photo.uri);
 
       let location = await Location.getCurrentPositionAsync({});
       console.log('location',location)
+      
+      const promises =  await MediaLibrary.createAssetAsync(photo.uri);
+
+     
       
       promises.location = {latitude: location.coords.latitude,
         longitude: location.coords.longitude}
@@ -153,16 +156,23 @@ export default class CameraScreen extends React.Component {
       
     }
     else {
-      const promises =  await MediaLibrary.createAssetAsync(photo.uri);
-     
       let location = await Location.getCurrentPositionAsync({});
       console.log('location',location)
       
+        
+      const promises =  await MediaLibrary.createAssetAsync(photo.uri)
+
       promises.location = {latitude: location.coords.latitude,
         longitude: location.coords.longitude}
         promises.timestamp = Date(Date.now())
-        console.log('promises',promises)
+
+
+     
+
+  
       const album = await MediaLibrary.getAlbumAsync('lsCamera')
+      console.log('promises',promises)
+
       await MediaLibrary.addAssetsToAlbumAsync(promises,album.id, false)
     }
   

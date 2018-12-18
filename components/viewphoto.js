@@ -1,11 +1,9 @@
 import React from 'react';
 import { Image, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-
+import {MediaLibrary} from 'expo'
 import { 
   Ionicons,
   MaterialIcons,
-  Foundation,
-  Octicons
 } from '@expo/vector-icons';
 
 import GalleryScreen from './GalleryScreen'
@@ -14,40 +12,29 @@ import GalleryScreen from './GalleryScreen'
 
 export default class ViewPhoto extends React.Component {
 
-  
+  state = {
+    photoDelete: false
+  }
+
+  deletePhoto = async () => {
+   await MediaLibrary.deleteAssetsAsync(this.props.photo)
+
+   this.setState({photoDelete: !this.state.photoDelete})
+
+   this.renderGallery()
+
+  }
+  ComponentWillUnmount() {
+    this.state.photoDelete = false
+  }
 
   renderGallery() {
     return <GalleryScreen  />;
   }  
  
-renderMoreOptions = () =>
-    (
-      <View style={styles.options}>
-        <View style={styles.detectors}>
-          <TouchableOpacity onPress={this.toggleBarcodeScanning}>
-            <MaterialCommunityIcons name="barcode-scan" size={32} color={this.state.barcodeScanning ? "white" : "#858585" } />
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.pictureSizeContainer}>
-          <Text style={styles.pictureQualityLabel}>Picture quality</Text>
-          <View style={styles.pictureSizeChooser}>
-            <TouchableOpacity onPress={this.previousPictureSize} style={{ padding: 6 }}>
-              <Ionicons name="md-arrow-dropleft" size={14} color="white" />
-            </TouchableOpacity>
-            <View style={styles.pictureSizeLabel}>
-              <Text style={{color: 'white'}}>{this.state.pictureSize}</Text>
-            </View>
-            <TouchableOpacity onPress={this.nextPictureSize} style={{ padding: 6 }}>
-              <Ionicons name="md-arrow-dropright" size={14} color="white" />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View> 
-    );
     render() {
-    const {uri} = this.props
-     console.log('uri-photo',uri)
+    const uri = this.props.uri
         return (           
           
           <View style={styles.container}>
@@ -71,13 +58,15 @@ renderMoreOptions = () =>
       </TouchableOpacity>
       <View style={{ flex: 0.4 }}>
         <TouchableOpacity
-        //  onPress={this.state.info && this.renderInfo()}
+       
           style={{ alignSelf: 'center' ,paddingTop: 10}}
         >
-          <Ionicons name="information-circle-outline" size={30} color="white" />
+          <Ionicons name="ios-information-circle-outline" size={30} color="white" />
         </TouchableOpacity>
       </View> 
-      <TouchableOpacity style={styles.bottomButton} >
+      <TouchableOpacity style={styles.bottomButton}
+      onPress={this.deletePhoto}
+      >
         <View>
           <Ionicons name="ios-trash" size={30} color="white" />
         </View>
