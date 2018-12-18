@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
 import ViewPhoto from './viewphoto'
+
 
 
 
@@ -9,6 +9,7 @@ export default class Photo extends React.Component {
   state = {
     image: null,
     viewPhoto: false,
+    selected: false
 
   };
   _mounted = false;
@@ -21,39 +22,37 @@ export default class Photo extends React.Component {
     this._mounted = false;
   }
 
-  
-
-  renderPhoto = () => {
-    <View style={styles.container}>
-
-<View style={styles.navbar}>
-          <TouchableOpacity style={styles.button} onPress={this.toggleViwPhoto}>
-            <MaterialIcons name="arrow-back" size={25} color="white" />
-          </TouchableOpacity>
-        </View>
-     </View>
-
+  toggleSelection = () => {
+   
+      console.log("ur2",this.props.uri)
+    this.setState(
+      { selected: !this.state.selected },
+      () => this.props.onSelectionToggle(this.props.uri,this.state.selected)
+    );
   }
 
   
+   
+
+  
   render() {
-    console.log('view',this.state.viewPhoto)
-    const { uri } = this.props;
     
+    const { uri } = this.props;
+   
+    console.log('uri-image',uri)
 
       return (
    
         <TouchableOpacity
         key={this.props.key}
         style={styles.pictureWrapper}
-        onPress={}
+        onPress={this.toggleSelection}
         activeOpacity={1}
       >
         <Image
           style={styles.picture}
           source={{ uri }}
         />
-       
       </TouchableOpacity>
       
         );
